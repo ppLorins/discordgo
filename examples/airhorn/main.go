@@ -5,6 +5,8 @@ import (
 	"flag"
 	"fmt"
 	"io"
+	"net/http"
+	"net/url"
 	"os"
 	"os/signal"
 	"strings"
@@ -37,8 +39,20 @@ func main() {
 		return
 	}
 
+	p := func(req *http.Request) (*url.URL, error) {
+		if req.URL.Hostname() == "gateway.discord.gg" {
+			u, e := url.Parse("socks5://localhost:1080")
+			if e != nil {
+				return nil, fmt.Errorf("parse configured proxy url fail")
+			}
+			return u, nil
+		}
+
+		return nil, nil
+	}
+
 	// Create a new Discord session using the provided bot token.
-	dg, err := discordgo.New("Bot " + token)
+	dg, err := discordgo.NewWithProxy("Bot "+token, p)
 	if err != nil {
 		fmt.Println("Error creating Discord session: ", err)
 		return

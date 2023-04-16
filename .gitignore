@@ -1,5 +1,6 @@
 # IDE-specific metadata
 .idea/
+vendor/
 
 # Environment variables. Useful for examples.
 .env

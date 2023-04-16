@@ -15,6 +15,7 @@ package discordgo
 
 import (
 	"net/http"
+	"net/url"
 	"runtime"
 	"time"
 
@@ -29,7 +30,7 @@ const VERSION = "0.27.1"
 // 		e.g. "Bot ..."
 // Or if it is an OAuth2 token, it must be prefixed with "Bearer "
 //		e.g. "Bearer ..."
-func New(token string) (s *Session, err error) {
+func NewWithProxy(token string, p func(*http.Request) (*url.URL, error)) (s *Session, err error) {
 
 	// Create an empty Session interface.
 	s = &Session{
@@ -49,6 +50,13 @@ func New(token string) (s *Session, err error) {
 		LastHeartbeatAck:       time.Now().UTC(),
 	}
 
+	if p != nil {
+		s.Dialer = &websocket.Dialer{
+			Proxy:            p,
+			HandshakeTimeout: 45 * time.Second,
+		}
+	}
+
 	// Initialize the Identify Package with defaults
 	// These can be modified prior to calling Open()
 	s.Identify.Compress = true
@@ -60,4 +68,9 @@ func New(token string) (s *Session, err error) {
 	s.Token = token
 
 	return
+
+}
+
+func New(token string) (s *Session, err error) {
+	return NewWithProxy(token, nil)
 }
