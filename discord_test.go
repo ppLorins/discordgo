@@ -9,8 +9,8 @@ import (
 	"time"
 )
 
-//////////////////////////////////////////////////////////////////////////////
-////////////////////////////////////////////////////// VARS NEEDED FOR TESTING
+// ////////////////////////////////////////////////////////////////////////////
+// //////////////////////////////////////////////////// VARS NEEDED FOR TESTING
 var (
 	dg    *Session // Stores a global discordgo user session
 	dgBot *Session // Stores a global discordgo bot session
@@ -141,7 +141,7 @@ func TestAddHandler(t *testing.T) {
 	d.AddHandler(interfaceHandler)
 	d.AddHandler(bogusHandler)
 
-	d.handleEvent(messageCreateEventType, &MessageCreate{})
+	d.handleEvent(MessageCreateEventType, &MessageCreate{})
 	d.handleEvent(messageDeleteEventType, &MessageDelete{})
 
 	<-time.After(500 * time.Millisecond)
@@ -171,11 +171,11 @@ func TestRemoveHandler(t *testing.T) {
 	d := Session{}
 	r := d.AddHandler(testHandler)
 
-	d.handleEvent(messageCreateEventType, &MessageCreate{})
+	d.handleEvent(MessageCreateEventType, &MessageCreate{})
 
 	r()
 
-	d.handleEvent(messageCreateEventType, &MessageCreate{})
+	d.handleEvent(MessageCreateEventType, &MessageCreate{})
 
 	<-time.After(500 * time.Millisecond)
 

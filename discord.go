@@ -27,9 +27,12 @@ const VERSION = "0.27.1"
 
 // New creates a new Discord session with provided token.
 // If the token is for a bot, it must be prefixed with "Bot "
-// 		e.g. "Bot ..."
+//
+//	e.g. "Bot ..."
+//
 // Or if it is an OAuth2 token, it must be prefixed with "Bearer "
-//		e.g. "Bearer ..."
+//
+//	e.g. "Bearer ..."
 func NewWithProxy(token string, p func(*http.Request) (*url.URL, error)) (s *Session, err error) {
 
 	// Create an empty Session interface.
@@ -48,6 +51,7 @@ func NewWithProxy(token string, p func(*http.Request) (*url.URL, error)) (s *Ses
 		UserAgent:              "DiscordBot (https://github.com/bwmarrin/discordgo, v" + VERSION + ")",
 		sequence:               new(int64),
 		LastHeartbeatAck:       time.Now().UTC(),
+		LogLevel:               LogDebug,
 	}
 
 	if p != nil {

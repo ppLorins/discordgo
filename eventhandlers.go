@@ -42,13 +42,13 @@ const (
 	interactionCreateEventType                   = "INTERACTION_CREATE"
 	inviteCreateEventType                        = "INVITE_CREATE"
 	inviteDeleteEventType                        = "INVITE_DELETE"
-	messageCreateEventType                       = "MESSAGE_CREATE"
+	MessageCreateEventType                       = "MESSAGE_CREATE"
 	messageDeleteEventType                       = "MESSAGE_DELETE"
 	messageDeleteBulkEventType                   = "MESSAGE_DELETE_BULK"
 	messageReactionAddEventType                  = "MESSAGE_REACTION_ADD"
 	messageReactionRemoveEventType               = "MESSAGE_REACTION_REMOVE"
 	messageReactionRemoveAllEventType            = "MESSAGE_REACTION_REMOVE_ALL"
-	messageUpdateEventType                       = "MESSAGE_UPDATE"
+	MessageUpdateEventType                       = "MESSAGE_UPDATE"
 	presenceUpdateEventType                      = "PRESENCE_UPDATE"
 	presencesReplaceEventType                    = "PRESENCES_REPLACE"
 	rateLimitEventType                           = "__RATE_LIMIT__"
@@ -760,7 +760,7 @@ type messageCreateEventHandler func(*Session, *MessageCreate)
 
 // Type returns the event type for MessageCreate events.
 func (eh messageCreateEventHandler) Type() string {
-	return messageCreateEventType
+	return MessageCreateEventType
 }
 
 // New returns a new instance of MessageCreate.
@@ -880,7 +880,7 @@ type messageUpdateEventHandler func(*Session, *MessageUpdate)
 
 // Type returns the event type for MessageUpdate events.
 func (eh messageUpdateEventHandler) Type() string {
-	return messageUpdateEventType
+	return MessageUpdateEventType
 }
 
 // New returns a new instance of MessageUpdate.
