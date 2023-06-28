@@ -150,6 +150,9 @@ type Message struct {
 
 	// An array of Sticker objects, if any were sent.
 	StickerItems []*Sticker `json:"sticker_items"`
+
+	// uuid for UVR tasks
+	UUID string `json:"uuid"`
 }
 
 // UnmarshalJSON is a helper function to unmarshal the Message.
