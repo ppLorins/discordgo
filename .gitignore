@@ -2,5 +2,7 @@
 .idea/
 vendor/
 
+test_discord.test
+
 # Environment variables. Useful for examples.
 .env

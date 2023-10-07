@@ -43,7 +43,7 @@ const (
 	inviteCreateEventType                        = "INVITE_CREATE"
 	inviteDeleteEventType                        = "INVITE_DELETE"
 	MessageCreateEventType                       = "MESSAGE_CREATE"
-	messageDeleteEventType                       = "MESSAGE_DELETE"
+	MessageDeleteEventType                       = "MESSAGE_DELETE"
 	messageDeleteBulkEventType                   = "MESSAGE_DELETE_BULK"
 	messageReactionAddEventType                  = "MESSAGE_REACTION_ADD"
 	messageReactionRemoveEventType               = "MESSAGE_REACTION_REMOVE"

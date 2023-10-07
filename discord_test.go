@@ -1,9 +1,15 @@
 package discordgo
 
 import (
+	"context"
 	"fmt"
+	"github.com/gorilla/websocket"
+	"net"
+	"net/http"
+	"net/url"
 	"os"
 	"runtime"
+	"strings"
 	"sync/atomic"
 	"testing"
 	"time"
@@ -299,4 +305,85 @@ func TestComplexScheduledEvents(t *testing.T) {
 	if err != nil {
 		t.Fatal("err on GuildScheduledEventEdit. Change of entity type to voice failed")
 	}
+}
+
+func proxyByDomain(req *http.Request) (*url.URL, error) {
+	pm := map[string]string{
+		"gateway.discord.gg":   "socks5://localhost:1080",
+		"discord.com":          "http://localhost:9080",
+		"cdn.discordapp.com":   "socks5://localhost:1080",
+		"media.discordapp.net": "socks5://localhost:1080",
+	}
+	for k, v := range pm {
+		if strings.Contains(req.URL.Hostname(), k) {
+			u, e := url.Parse(v)
+			if e != nil {
+				panic(e)
+			}
+			return u, nil
+		}
+	}
+
+	return nil, nil
+}
+
+func defaultTransportDialContext(dialer *net.Dialer) func(context.Context, string, string) (net.Conn, error) {
+	return dialer.DialContext
+}
+
+func TestBug(t *testing.T) {
+	token := "MTA4NzI1MzUzNzU1MTA0MDU3NA.GjiUo5.Ej6Y6CvR8J-XztobaoJ6lUwTenqPlujc2ZS0Eo"
+	s, err := NewWithProxy("Bot "+token, nil)
+	if err != nil {
+		panic(err)
+	}
+	s.Dialer = &websocket.Dialer{
+		Proxy:            proxyByDomain,
+		HandshakeTimeout: 45 * time.Second,
+	}
+	CustomTransport := &http.Transport{
+		Proxy: proxyByDomain,
+		DialContext: defaultTransportDialContext(&net.Dialer{
+			Timeout:   30 * time.Second,
+			KeepAlive: 30 * time.Second,
+		}),
+		ForceAttemptHTTP2:     true,
+		MaxIdleConns:          100,
+		IdleConnTimeout:       90 * time.Second,
+		TLSHandshakeTimeout:   10 * time.Second,
+		ExpectContinueTimeout: 1 * time.Second,
+	}
+	s.Client = &http.Client{Timeout: (20 * time.Second), Transport: CustomTransport}
+	s.LogLevel = 1
+
+	// Register ready as a callback for the ready events.
+	//s.AddHandler(ready)
+
+	// Register messageCreate as a callback for the messageCreate events.
+	s.AddHandler(messageCreate)
+
+	s.AddHandler(messageUpdate)
+
+	s.AddHandler(messageDelete)
+
+	//s.Identify.Intents = IntentGuildMessages | IntentMessageContent
+	s.Identify.Intents = IntentsAll
+
+	err = s.Open()
+	if err != nil {
+		panic(err)
+	}
+	time.Sleep(1 * time.Hour)
+}
+
+func messageCreate(s *Session, m *MessageCreate) {
+	fmt.Printf("message_create,content:%+v\n", m.Content)
+}
+
+func messageUpdate(s *Session, m *MessageUpdate) {
+	fmt.Printf("message_update,content:%+v\n", m.Content)
+}
+
+func messageDelete(s *Session, m *MessageDelete) {
+	fmt.Printf("message_delete,content:%+v\n", m.Content)
 }
