@@ -148,7 +148,7 @@ func TestAddHandler(t *testing.T) {
 	d.AddHandler(bogusHandler)
 
 	d.handleEvent(MessageCreateEventType, &MessageCreate{})
-	d.handleEvent(messageDeleteEventType, &MessageDelete{})
+	d.handleEvent(MessageDeleteEventType, &MessageDelete{})
 
 	<-time.After(500 * time.Millisecond)
 

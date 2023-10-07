@@ -780,7 +780,7 @@ type messageDeleteEventHandler func(*Session, *MessageDelete)
 
 // Type returns the event type for MessageDelete events.
 func (eh messageDeleteEventHandler) Type() string {
-	return messageDeleteEventType
+	return MessageDeleteEventType
 }
 
 // New returns a new instance of MessageDelete.
