@@ -153,6 +153,9 @@ type Message struct {
 
 	// uuid for UVR tasks
 	UUID string `json:"uuid"`
+
+	// cancel flag for job distinguish
+	IsCancel bool `json:"is_cancel"`
 }
 
 // UnmarshalJSON is a helper function to unmarshal the Message.
